@@ -3,7 +3,14 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'otelcollector'
+  - job_name: 'job_otel-collector-otlp'
+    scrape_interval: 10s
     static_configs:
-      - targets: [ 'otelcol:8888' ]
       - targets: [ 'otelcol:8889' ]
+  
+  # # Metrics from the OpenTelemetry collector itself.
+  # # if we want to get the metrics as well of the collector itself, uncomment this code block
+  # - job_name: 'job_otel-collector-itself'
+  #   scrape_interval: 10s
+  #   static_configs:
+  #   - targets: ['otelcol:8888']

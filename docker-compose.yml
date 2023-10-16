@@ -10,13 +10,20 @@ services:
     volumes:
       - ./otel/config.yml:/etc/otelcol-contrib/config.yaml
     ports:
-      - 4318:4318 # OTLP http receiver
+      # OTLP gRPC receiver
       - 4317:4317
-      - 8888
+      # OTLP http receiver
+      - 4318:4318
+      # OTEL COLLECTOR EXPORTER Prometheus exposed endpoint & port for metrics(From RECIEVERS)
+      # to be pulled by Prometheus scraper Job.
       - 8889
+      # OTEL COLLECTOR METRICS(ITSELF) exposed endpoint & port for prometheus scraper Job.
+      # (If we want to get the collectors metrics.)
+      # - 8888
 
 
-  # DATABASE
+  # Event monitoring and alerting
+  #  - Records metrics in a time series database built using an HTTP PULL model
   prometheus:
     container_name: prometheus
     image: prom/prometheus:v2.44.0
