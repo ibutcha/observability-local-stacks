@@ -1,0 +1,51 @@
+server:
+  http_listen_port: 3200
+
+query_frontend:
+  search:
+    duration_slo: 5s
+    throughput_bytes_slo: 1.073741824e+09
+  trace_by_id:
+    duration_slo: 5s
+
+distributor:
+  # https://github.com/open-telemetry/opentelemetry-collector/tree/main/receiver
+  receivers:                          
+    otlp:
+      protocols:
+        http:
+        grpc:
+
+compactor:
+  compaction:
+    # overall Tempo trace retention. set for demo purposes
+    block_retention: 1h                
+
+metrics_generator:
+  registry:
+    external_labels:
+      source: tempo
+      cluster: docker-compose
+  storage:
+    path: /tmp/tempo/generator/wal
+    # remote_write:
+    #   - url: http://prometheus:9090/api/v1/write
+    #     send_exemplars: true
+
+storage:
+  trace:
+    backend: local                     # backend configuration to use
+    wal:                               # "Write-Ahead Log." 
+      path: /tmp/tempo/wal             #  - where to store the the wal locally
+    local:
+      path: /tmp/tempo/blocks
+
+overrides:
+  # service-graphs
+  #  - This processor is likely responsible for generating metrics related to the service dependency graph,
+  #    showing how different services or components in your system interact with each other.
+  #
+  # span-metrics
+  #  - This processor probably generates metrics related to individual spans within traces.
+  #   Spans represent specific operations or events in a trace.  
+  metrics_generator_processors: [service-graphs, span-metrics]
