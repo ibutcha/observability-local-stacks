@@ -14,3 +14,10 @@ scrape_configs:
   #   scrape_interval: 10s
   #   static_configs:
   #   - targets: ['otelcol:8888']
+
+# remote_write:
+#   - url: ENDPOINT
+#     remote_timeout: 30s
+#     sigv4:
+#       region: REGION
+#       role_arn: arn:aws:iam::AWS_ACCOUNT_ID:role/ROLE_NAME
